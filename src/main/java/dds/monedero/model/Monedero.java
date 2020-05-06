@@ -14,14 +14,16 @@ public class Monedero {
 
   private double saldo = 0;
   private double maximoExtraccionDiaria = 1000;
-  private List<Movimiento> movimientos = new ArrayList<>();
+  private List<Movimiento> movimientos;
 
   public Monedero() {
     saldo = 0;
+    movimientos = new ArrayList<>();
   }
 
   public Monedero(double montoInicial) {
     saldo = montoInicial;
+    movimientos = new ArrayList<>();
   }
 
   public void poner(double cuanto) {
@@ -74,17 +76,17 @@ public class Monedero {
     }
   }
 
-  private void puedeDepositar(){
+  public void puedeDepositar(){
     int depositosDeHoy = cantidadDepositosHoy();
 
-    if (depositosDeHoy >= 3);
-    {
+    if (depositosDeHoy >= 3){
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
+
   }
 
-  private int cantidadDepositosHoy(){
-    List<Movimiento> depositos = getMovimientos().stream().filter(movimiento -> movimiento.getClass().equals(Deposito.class)).collect(Collectors.toList());
+  public int cantidadDepositosHoy(){
+    List<Movimiento> depositos = movimientos.stream().filter(movimiento -> movimiento.getClass().equals(Deposito.class)).collect(Collectors.toList());
     return (int) depositos.stream().filter(deposito -> deposito.esDeLaFecha(LocalDate.now())).count();
   }
 
