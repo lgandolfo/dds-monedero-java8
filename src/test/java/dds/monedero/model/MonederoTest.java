@@ -61,7 +61,7 @@ public class MonederoTest {
   }
 
   @Test
-  public void depositosYExtracciones(){
+  public void DepositosYExtracciones(){
     monedero.poner(1000);
     monedero.sacar(500);
     monedero.poner(200);
