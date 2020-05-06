@@ -3,28 +3,25 @@ package dds.monedero.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dds.monedero.exceptions.MaximaCantidadDepositosException;
 import dds.monedero.exceptions.MaximoExtraccionDiarioException;
 import dds.monedero.exceptions.MontoNegativoException;
 import dds.monedero.exceptions.SaldoMenorException;
 
-public class Cuenta {
+public class Monedero {
 
   private double saldo = 0;
   private double maximoExtraccionDiaria = 1000;
   private List<Movimiento> movimientos = new ArrayList<>();
 
-  public Cuenta() {
+  public Monedero() {
     saldo = 0;
   }
 
-  public Cuenta(double montoInicial) {
+  public Monedero(double montoInicial) {
     saldo = montoInicial;
-  }
-
-  public void setMovimientos(List<Movimiento> movimientos) {
-    this.movimientos = movimientos;
   }
 
   public void poner(double cuanto) {
@@ -33,7 +30,9 @@ public class Cuenta {
 
     puedeDepositar();
 
-    agregarMovimiento(new Deposito(LocalDate.now(), cuanto));
+    Deposito nuevoDeposito = new Deposito(LocalDate.now(), cuanto);
+    agregarMovimiento(nuevoDeposito);
+    setSaldo(nuevoDeposito.realizarSobre(saldo));
   }
 
   public void sacar(double cuanto) {
@@ -44,12 +43,10 @@ public class Cuenta {
 
     tieneLimiteDiario(cuanto);
 
-    agregarMovimiento(new Extraccion(LocalDate.now(), cuanto));
-  }
+    Extraccion nuevaExtraccion = new Extraccion(LocalDate.now(), cuanto);
+    agregarMovimiento(nuevaExtraccion);
+    setSaldo(nuevaExtraccion.realizarSobre(saldo));
 
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
-    Movimiento movimiento = new Movimiento(fecha, cuanto);
-    movimientos.add(movimiento);
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
@@ -77,11 +74,18 @@ public class Cuenta {
     }
   }
 
-  private boolean puedeDepositar(){
-    int depositosDeHoy = (int) getMovimientos().stream().filter(movimiento -> movimiento.getClass().equals(Deposito.class)).count();
+  private void puedeDepositar(){
+    int depositosDeHoy = cantidadDepositosHoy();
 
     if (depositosDeHoy >= 3);
-    throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
+    {
+      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
+    }
+  }
+
+  private int cantidadDepositosHoy(){
+    List<Movimiento> depositos = getMovimientos().stream().filter(movimiento -> movimiento.getClass().equals(Deposito.class)).collect(Collectors.toList());
+    return (int) depositos.stream().filter(deposito -> deposito.esDeLaFecha(LocalDate.now())).count();
   }
 
   private double obtenerMontoExtraibleActual(){

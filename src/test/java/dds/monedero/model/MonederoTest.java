@@ -9,16 +9,19 @@ import dds.monedero.exceptions.MontoNegativoException;
 import dds.monedero.exceptions.SaldoMenorException;
 
 public class MonederoTest {
-  private Cuenta cuenta;
+  private Monedero cuenta;
+  private Monedero nueva;
 
   @Before
   public void init() {
-    cuenta = new Cuenta();
+    cuenta = new Monedero();
+    nueva = new Monedero();
   }
 
   @Test
   public void Poner() {
-    cuenta.poner(1500);
+    Monedero nueva1 = new Monedero();
+    nueva1.poner(1500);
   }
 
   @Test(expected = MontoNegativoException.class)
@@ -28,9 +31,9 @@ public class MonederoTest {
 
   @Test
   public void TresDepositos() {
-    cuenta.poner(1500);
-    cuenta.poner(456);
-    cuenta.poner(1900);
+    nueva.poner(1500);
+    nueva.poner(456);
+    nueva.poner(1900);
   }
 
   @Test(expected = MaximaCantidadDepositosException.class)

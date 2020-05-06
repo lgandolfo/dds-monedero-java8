@@ -6,4 +6,9 @@ public class Deposito extends Movimiento {
     public Deposito(LocalDate fecha, double monto) {
         super(fecha, monto);
     }
+
+    @Override
+    public double realizarSobre(double saldo) {
+        return saldo + getMonto();
+    }
 }
