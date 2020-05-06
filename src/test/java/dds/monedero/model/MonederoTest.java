@@ -18,7 +18,7 @@ public class MonederoTest {
   }
 
   @Test
-  public void depositar(){
+  public void Poner(){
     monedero.poner(1000);
   }
 
@@ -58,6 +58,14 @@ public class MonederoTest {
   @Test(expected = MontoNegativoException.class)
   public void ExtraerMontoNegativo() {
     monedero.sacar(-500);
+  }
+
+  @Test
+  public void depositosYExtracciones(){
+    monedero.poner(1000);
+    monedero.sacar(500);
+    monedero.poner(200);
+    Assert.assertEquals(700,monedero.getSaldo(),0);
   }
 
 

@@ -76,7 +76,7 @@ public class Monedero {
     }
   }
 
-  public void puedeDepositar(){
+  private void puedeDepositar(){
     int depositosDeHoy = cantidadDepositosHoy();
 
     if (depositosDeHoy >= 3){
@@ -85,7 +85,7 @@ public class Monedero {
 
   }
 
-  public int cantidadDepositosHoy(){
+  private int cantidadDepositosHoy(){
     List<Movimiento> depositos = movimientos.stream().filter(movimiento -> movimiento.getClass().equals(Deposito.class)).collect(Collectors.toList());
     return (int) depositos.stream().filter(deposito -> deposito.esDeLaFecha(LocalDate.now())).count();
   }
