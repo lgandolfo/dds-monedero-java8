@@ -9,10 +9,9 @@ public class Movimiento {
   private double monto;
   private boolean esDeposito;
 
-  public Movimiento(LocalDate fecha, double monto, boolean esDeposito) {
+  public Movimiento(LocalDate fecha, double monto) {
     this.fecha = fecha;
     this.monto = monto;
-    this.esDeposito = esDeposito;
   }
 
   public double getMonto() {
